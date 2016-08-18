@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 
 namespace SL
 {
@@ -15,18 +16,22 @@ namespace SL
             Console.WriteLine("success");
             //Program.testDb();
             //Program.getMes();
-            //Program.sendMes();
+            // Program.sendMes();
+            Console.ReadKey();
         }
-        
-       
-        
+
+
+
         public static void sendMes()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory { Uri = ConfigurationManager.AppSettings["RabbitUri"] };
+
+        
+
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "hello",
+                channel.QueueDeclare(queue: "output-query",
                                      durable: false,
                                      exclusive: false,
                                      autoDelete: false,
